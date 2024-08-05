@@ -8,25 +8,37 @@ import time
 
 #Configure Window 1
 window = tkinter.Tk()
-window.title("Stoopid Project LOL")
+window.title("Input Window")
 window.geometry('500x500')
 window.configure(bg='#002421')
 
-def judge(entryTxt = "https://www.roblox.com/games/12411473842/Pressure"):
+def judge():
     
+    entryTxt = entry_URL.get()
+    print("URL entered --> " + entryTxt)
 
+    if "https://www.roblox.com/games" not in entryTxt:
+        print("Invalid URL Entered!")
+        return
 
     options = ChromeOptions()
-    #options.add_argument("--headless")
+    options.add_argument("--headless")
     driver = Chrome(options=options)
     #entryTxt
-    driver.get("https://www.roblox.com/games/12411473842/Pressure")
+    try:
+        driver.get(entryTxt)
+    except:
+        print("Invalid URL Entered!")
+        return
+
+    
 
     #waiting for page load
     time.sleep(5)
 
     playerCtStrRaw = driver.find_element(By.CSS_SELECTOR, ".builder-font .font-caption-body, .builder-font .font-caption-body:active, .builder-font .font-caption-body:focus, .builder-font .font-caption-body:hover, .builder-font .font-caption-body:link, .builder-font .font-caption-body:visited, .builder-font .tooltip .tooltip-inner, .builder-font .tooltip .tooltip-inner:active, .builder-font .tooltip .tooltip-inner:focus, .builder-font .tooltip .tooltip-inner:hover, .builder-font .tooltip .tooltip-inner:link, .builder-font .tooltip .tooltip-inner:visited")
 
+    
 
     arr = playerCtStrRaw.text.split(",")
     playerCtStr = arr[0] + arr[1]
@@ -63,13 +75,14 @@ def judge(entryTxt = "https://www.roblox.com/games/12411473842/Pressure"):
 
     
 
-
+def test():
+    print(entry_URL.get() + " >>> Hey I guess it works!")
     
 
 def renderResults(playerCt, result):
     #Window 2
     display = tkinter.Tk()
-    display.title("Stoopid Results LOL")
+    display.title("Result Window")
     display.geometry('500x500')
     display.configure(bg='#002421')
     
@@ -92,9 +105,7 @@ def renderResults(playerCt, result):
 #Create Elements
 enter_URL = tkinter.Label(window, text="Enter Game URL:", bg='#424242', fg='#FFFFFF', pady=3, padx=3)
 entry_URL = tkinter.Entry(window)
-entryTxt = entry_URL.get()
-print(entryTxt)
-button_calculate = tkinter.Button(window, text="Calculate", command= lambda: judge(entryTxt))
+button_calculate = tkinter.Button(window, text="Calculate", command=judge)
 
 #Render the elements
 enter_URL.grid(row=0, column=0)
