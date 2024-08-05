@@ -106,25 +106,33 @@ def judge():
 
     driver.quit()
 
-    renderResults(playerCt, playerCtResult)
+    renderResults(playerCt, playerCtResult, yrRlsed, yrRlsedResult)
     
 
-def renderResults(playerCt, result): #Use arbitrary arguments
+def renderResults(*valsNRslts): #Use arbitrary arguments
     #Window 2
     display = tkinter.Tk()
     display.title("Result Window")
     display.geometry('500x500')
     display.configure(bg='#002421')
     
-    playerCtTxt = "Players: " + str(playerCt)
-    
-    #Create Elements (for handling arbitrary arguments, create an array and assign each element a label, then gride them all in another for loop)
-    renderPlayers = tkinter.Label(display, text=playerCtTxt, bg='#424242', fg='#FFFFFF', pady=3, padx=3)
-    renderResult = tkinter.Label(display, text=result, bg='#424242', fg='#FFFFFF', pady=3, padx=3)
+    render = [None] * len(valsNRslts) 
 
+    #Create Elements (for handling arbitrary arguments, create an array and assign each element a label, then grid them all in another for loop)
+    for i in range(len(valsNRslts)):
+        if(i == 0):
+            playerCt = "Players: " + str(valsNRslts[0])
+            render[0] = tkinter.Label(display, text=playerCt, bg='#424242', fg='#FFFFFF', pady=3, padx=3)
+            continue
+        if(i == 2):
+            dateCr = "Date Created: " + str(valsNRslts[2])
+            render[2] = tkinter.Label(display, text=dateCr, bg='#424242', fg='#FFFFFF', pady=3, padx=3)
+            continue
+        render[i] = tkinter.Label(display, text=valsNRslts[i], bg='#424242', fg='#FFFFFF', pady=3, padx=3)
+    
     #Render Elements
-    renderPlayers.grid(row=0,column=0)
-    renderResult.grid(row=1,column=0)
+    for i in range(len(render)):
+        render[i].grid(row=i, column=0)
 
     display.mainloop()
 
