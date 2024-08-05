@@ -12,6 +12,46 @@ window.title("Input Window")
 window.geometry('500x500')
 window.configure(bg='#002421')
 
+def rlsYrJudger(yrRlsed):
+    result = ""
+    if yrRlsed >= 4 and yrRlsed < 6:
+        result = "This game was created when the platform was created, probably one of the first ever games or a developer test site."
+    elif yrRlsed >= 6 and yrRlsed < 13:
+        result = "This game was created in the classic era of Roblox."
+    elif yrRlsed >= 13 and yrRlsed < 16:
+        result = "This game was created in the post-classic era of Roblox."
+    elif yrRlsed >= 16 and yrRlsed < 20:
+        result = "This game was created in the golden era of Roblox."
+    elif yrRlsed >= 20 and yrRlsed < 22:
+        result = "This game was created in the modern era of Roblox."
+    elif yrRlsed >= 22:
+        result = "This game is pretty fresh, and was created in the post-modern era of Roblox."
+    return result
+
+def playerCtJudger(playerCt):
+    result = ""
+    if playerCt >= 0 and playerCt < 100:
+        result = "No one is here!"
+    elif playerCt >= 100 and playerCt < 500:
+        result = "This game is pretty barren."
+    elif playerCt >= 500 and playerCt < 1000:
+        result = "It's got some people, though it's still under the radar."
+    elif playerCt >= 1000 and playerCt < 3000:
+        result = "This is a solid game, likely known by many."
+    elif playerCt >= 3000 and playerCt < 10000:
+        result = "A pretty popular game, nice."
+    elif playerCt >= 10000 and playerCt < 20000:
+        result = "A very popular game! Known by many for sure."
+    elif playerCt >= 20000 and playerCt < 50000:
+        result = "Seems like this game is all the rage, must be a front page game."
+    elif playerCt >= 50000 and playerCt < 100000:
+        result = "This game must be one of the top games on the site!"
+    elif playerCt >= 100000 and playerCt < 500000:
+        result = "This game has too many players!"
+    elif playerCt >= 500000:
+        result = "How can the Roblox servers even handle this?"
+    return result
+
 def judge():
     
     entryTxt = entry_URL.get()
@@ -36,50 +76,40 @@ def judge():
     #waiting for page load
     time.sleep(5)
 
-    playerCtStrRaw = driver.find_element(By.CSS_SELECTOR, ".builder-font .font-caption-body, .builder-font .font-caption-body:active, .builder-font .font-caption-body:focus, .builder-font .font-caption-body:hover, .builder-font .font-caption-body:link, .builder-font .font-caption-body:visited, .builder-font .tooltip .tooltip-inner, .builder-font .tooltip .tooltip-inner:active, .builder-font .tooltip .tooltip-inner:focus, .builder-font .tooltip .tooltip-inner:hover, .builder-font .tooltip .tooltip-inner:link, .builder-font .tooltip .tooltip-inner:visited")
-
+    #Gather Judging Data
+    statistics = driver.find_elements(By.CSS_SELECTOR, ".builder-font .font-caption-body, .builder-font .font-caption-body:active, .builder-font .font-caption-body:focus, .builder-font .font-caption-body:hover, .builder-font .font-caption-body:link, .builder-font .font-caption-body:visited, .builder-font .tooltip .tooltip-inner, .builder-font .tooltip .tooltip-inner:active, .builder-font .tooltip .tooltip-inner:focus, .builder-font .tooltip .tooltip-inner:hover, .builder-font .tooltip .tooltip-inner:link, .builder-font .tooltip .tooltip-inner:visited")
+    playerCtStrRaw = statistics[0]
+    yearCreated = statistics[3]
+    print(yearCreated.text)
     
-
+    #Judge Player Count
     arr = playerCtStrRaw.text.split(",")
     playerCtStr = arr[0] + arr[1]
 
-    result = ""
-    
     playerCt = int(playerCtStr)
-    
-    if playerCt >= 0 and playerCt < 100:
-        result = "No one is here!"
-    elif playerCt >= 100 and playerCt < 500:
-        result = "This game is pretty barren."
-    elif playerCt >= 500 and playerCt < 1000:
-        result = "It's got some people, though it's still under the radar."
-    elif playerCt >= 1000 and playerCt < 3000:
-        result = "This is a solid game, likely known by many."
-    elif playerCt >= 3000 and playerCt < 10000:
-        result = "A pretty popular game, nice."
-    elif playerCt >= 10000 and playerCt < 20000:
-        result = "A very popular game! Known by many for sure."
-    elif playerCt >= 20000 and playerCt < 50000:
-        result = "Seems like this game is all the rage, must be a front page game."
-    elif playerCt >= 50000 and playerCt < 100000:
-        result = "This game must be one of the top games on the site!"
-    elif playerCt >= 100000 and playerCt < 500000:
-        result = "This game has too many players!"
-    elif playerCt >= 500000:
-        result = "How can the Roblox servers even handle this?"
-    
+    playerCtResult = playerCtJudger(playerCt)
+
+    #Judge Release Year
+    yrRlsed = int(yearCreated.text[8:])
+    yrRlsedResult = rlsYrJudger(yrRlsed)
+    print(yrRlsedResult)
+
+    #Judge Pet Games
+
+    #Judge Tycoons
+
+    #Judge Simulators
+
+    #Judge Roleplay/RP Games (look in descriptions as well for string literals!)
+
+    #Judge Obbies
 
     driver.quit()
 
-    renderResults(playerCt, result)
-
+    renderResults(playerCt, playerCtResult)
     
 
-def test():
-    print(entry_URL.get() + " >>> Hey I guess it works!")
-    
-
-def renderResults(playerCt, result):
+def renderResults(playerCt, result): #Use arbitrary arguments
     #Window 2
     display = tkinter.Tk()
     display.title("Result Window")
@@ -88,7 +118,7 @@ def renderResults(playerCt, result):
     
     playerCtTxt = "Players: " + str(playerCt)
     
-    #Create Elements
+    #Create Elements (for handling arbitrary arguments, create an array and assign each element a label, then gride them all in another for loop)
     renderPlayers = tkinter.Label(display, text=playerCtTxt, bg='#424242', fg='#FFFFFF', pady=3, padx=3)
     renderResult = tkinter.Label(display, text=result, bg='#424242', fg='#FFFFFF', pady=3, padx=3)
 
