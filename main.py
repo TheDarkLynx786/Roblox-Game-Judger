@@ -52,6 +52,16 @@ def playerCtJudger(playerCt):
         result = "How can the Roblox servers even handle this?"
     return result
 
+
+def contains(item1, item2):
+    if item1 in item2 or item1.upper() in item2 or item1.lower() in item2:
+        return True
+    return False
+
+def getYear(dateCr):
+    arr = dateCr.split("/")
+    return int(arr[2][2:])
+
 def judge():
     
     entryTxt = entry_URL.get()
@@ -77,36 +87,69 @@ def judge():
     time.sleep(5)
 
     #Gather Judging Data
+    title = driver.find_element(By.CLASS_NAME, "game-name")
+    description = driver.find_element(By.CLASS_NAME, "game-description")
+    
     statistics = driver.find_elements(By.CSS_SELECTOR, ".builder-font .font-caption-body, .builder-font .font-caption-body:active, .builder-font .font-caption-body:focus, .builder-font .font-caption-body:hover, .builder-font .font-caption-body:link, .builder-font .font-caption-body:visited, .builder-font .tooltip .tooltip-inner, .builder-font .tooltip .tooltip-inner:active, .builder-font .tooltip .tooltip-inner:focus, .builder-font .tooltip .tooltip-inner:hover, .builder-font .tooltip .tooltip-inner:link, .builder-font .tooltip .tooltip-inner:visited")
     playerCtStrRaw = statistics[0]
-    yearCreated = statistics[3]
-    print(yearCreated.text)
+    dateCreated = statistics[3]
     
     #Judge Player Count
-    arr = playerCtStrRaw.text.split(",")
-    playerCtStr = arr[0] + arr[1]
+    if "," in playerCtStrRaw.text:    
+        arr = playerCtStrRaw.text.split(",")
+        playerCtStr = arr[0] + arr[1]
+    else:
+        playerCtStr = playerCtStrRaw.text
 
     playerCt = int(playerCtStr)
     playerCtResult = playerCtJudger(playerCt)
+    playerCt = "Players: " + playerCtStr
 
     #Judge Release Year
-    yrRlsed = int(yearCreated.text[8:])
+    
+    yrRlsed = getYear(dateCreated.text)
     yrRlsedResult = rlsYrJudger(yrRlsed)
-    print(yrRlsedResult)
+    yrRlsed = "Date Created: " + str(dateCreated.text)
 
     #Judge Pet Games
+    
+    petResults = None
+    if contains("Pet", title.text) or contains("Pet", description.text):
+        petResults = "Very likely chance that this game is RNG based, features something close to gambling, and has pretty low-effort gameplay."
+
+    #Judge SCP Games
+
+    scpResults = None
+    if contains("SCP", title.text) or contains("SCP", description.text):
+        scpResults = "SCP huh? Having fun being part of that somewhat niche fanbase? Me too, it's quite a cool place. :)"
 
     #Judge Tycoons
 
+    tycResults = None
+    if contains("Tycoon", title.text) or contains("Tycoon", description.text):
+        tycResults = "Cool that you like growing an empire but go do it for real? You just keep waiting to keep buying more stuff mate."
+
     #Judge Simulators
+
+    simResults = None
+    if contains("Simulator", title.text) or contains("Simulator", description.text):
+        simResults = "This is either a clicker game or the very repetitive \"do, earn, buy, reapeat\" cycle, or it may actually be a well-done simulator."
 
     #Judge Roleplay/RP Games (look in descriptions as well for string literals!)
 
+    obbResults = None
+    if contains("Obby", title.text) or contains("Obby", description.text):
+        obbResults = "Parkour! Hope it's challenging. :)"
+
     #Judge Obbies
+
+    rpResults = None
+    if contains("RP", title.text) or contains("RP", description.text) or contains("Roleplay", title.text) or contains("Roleplay", description.text):
+        rpResults = "So do you have the friends to be playing this, or are you just trolling on here? Also watch out for ODers, they're quite annoying."
 
     driver.quit()
 
-    renderResults(playerCt, playerCtResult, yrRlsed, yrRlsedResult)
+    renderResults(playerCt, playerCtResult, yrRlsed, yrRlsedResult, petResults, scpResults, tycResults, simResults, obbResults, rpResults)
     
 
 def renderResults(*valsNRslts): #Use arbitrary arguments
@@ -120,18 +163,14 @@ def renderResults(*valsNRslts): #Use arbitrary arguments
 
     #Create Elements (for handling arbitrary arguments, create an array and assign each element a label, then grid them all in another for loop)
     for i in range(len(valsNRslts)):
-        if(i == 0):
-            playerCt = "Players: " + str(valsNRslts[0])
-            render[0] = tkinter.Label(display, text=playerCt, bg='#424242', fg='#FFFFFF', pady=3, padx=3)
-            continue
-        if(i == 2):
-            dateCr = "Date Created: " + str(valsNRslts[2])
-            render[2] = tkinter.Label(display, text=dateCr, bg='#424242', fg='#FFFFFF', pady=3, padx=3)
-            continue
+        if valsNRslts[i] == None:
+            continue; 
         render[i] = tkinter.Label(display, text=valsNRslts[i], bg='#424242', fg='#FFFFFF', pady=3, padx=3)
     
     #Render Elements
     for i in range(len(render)):
+        if render[i] == None:
+            continue; 
         render[i].grid(row=i, column=0)
 
     display.mainloop()
