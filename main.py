@@ -88,9 +88,17 @@ def judge():
 
     #Gather Judging Data
     title = driver.find_element(By.CLASS_NAME, "game-name")
+    temp = driver.find_elements(By.CSS_SELECTOR, ".builder-font .font-bold, .builder-font .font-bold:active, .builder-font .font-bold:hover, .builder-font .font-bold:link, .builder-font .font-bold:visited, .builder-font .font-header-2, .builder-font .font-header-2:active, .builder-font .font-header-2:hover, .builder-font .font-header-2:link, .builder-font .font-header-2:visited, .builder-font .h5, .builder-font .h5:active, .builder-font .h5:hover, .builder-font .h5:link, .builder-font .h5:visited, .builder-font .h6, .builder-font .h6:active, .builder-font .h6:hover, .builder-font .h6:link, .builder-font .h6:visited, .builder-font .text-footer-nav, .builder-font .text-footer-nav:active, .builder-font .text-footer-nav:hover, .builder-font .text-footer-nav:link, .builder-font .text-footer-nav:visited, .builder-font .text-label, .builder-font .text-label:active, .builder-font .text-label:hover, .builder-font .text-label:link, .builder-font .text-label:visited, .builder-font .text-lead, .builder-font .text-lead:active, .builder-font .text-lead:hover, .builder-font .text-lead:link, .builder-font .text-lead:visited, .builder-font .text-name, .builder-font .text-name:active, .builder-font .text-name:hover, .builder-font .text-name:link, .builder-font .text-name:visited, .builder-font .text-subject, .builder-font .text-subject:active, .builder-font .text-subject:hover, .builder-font .text-subject:link, .builder-font .text-subject:visited, .builder-font .text-warning, .builder-font .text-warning:active, .builder-font .text-warning:hover, .builder-font .text-warning:link, .builder-font .text-warning:visited, .builder-font h5, .builder-font h5:active, .builder-font h5:hover, .builder-font h5:link, .builder-font h5:visited, .builder-font h6, .builder-font h6:active, .builder-font h6:hover, .builder-font h6:link, .builder-font h6:visited, .builder-font strong, .builder-font strong:active, .builder-font strong:hover, .builder-font strong:link, .builder-font strong:visited")
+    devs = temp[13]
+    
+    titleCnt = title.text
+    devsCnt = devs.text
+    
     description = driver.find_element(By.CLASS_NAME, "game-description")
     
-    statistics = driver.find_elements(By.CSS_SELECTOR, ".builder-font .font-caption-body, .builder-font .font-caption-body:active, .builder-font .font-caption-body:focus, .builder-font .font-caption-body:hover, .builder-font .font-caption-body:link, .builder-font .font-caption-body:visited, .builder-font .tooltip .tooltip-inner, .builder-font .tooltip .tooltip-inner:active, .builder-font .tooltip .tooltip-inner:focus, .builder-font .tooltip .tooltip-inner:hover, .builder-font .tooltip .tooltip-inner:link, .builder-font .tooltip .tooltip-inner:visited")
+    descCnt = description.text
+
+    statistics = driver.find_elements(By.CSS_SELECTOR, ".builder-font .font-caption-body, .builder-font .font-caption-body:active, .builder-font .font-caption-body:focus, .builder-font .font-caption-body:hover, .builder-font .font-caption-body:link, .builder-font .font-caption-body:visited, .builder-font .tooltip .tooltip-inner, .builder-font .tooltip .tooltip-inner:active, .builder-font .tooltip .tooltip-inner:focus, .builder-font .tooltip .tooltip-inner:hover, .builder-font .tooltip .tooltip-inner:link, .builder-font .tooltip .tooltip-inner:visited")    
     playerCtStrRaw = statistics[0]
     dateCreated = statistics[3]
     
@@ -114,62 +122,70 @@ def judge():
     #Judge Pet Games
     
     petResults = None
-    if contains("Pet", title.text) or contains("Pet", description.text):
+    if contains("Pet", titleCnt) or contains("Pet", descCnt):
         petResults = "Very likely chance that this game is RNG based, features something close to gambling, and has pretty low-effort gameplay."
 
     #Judge SCP Games
 
     scpResults = None
-    if contains("SCP", title.text) or contains("SCP", description.text):
+    if contains("SCP", titleCnt) or contains("SCP", descCnt):
         scpResults = "SCP huh? Having fun being part of that somewhat niche fanbase? Me too, it's quite a cool place. :)"
 
     #Judge Tycoons
 
     tycResults = None
-    if contains("Tycoon", title.text) or contains("Tycoon", description.text):
+    if contains("Tycoon", titleCnt) or contains("Tycoon", descCnt):
         tycResults = "Cool that you like growing an empire but go do it for real? You just keep waiting to keep buying more stuff mate."
 
     #Judge Simulators
 
     simResults = None
-    if contains("Simulator", title.text) or contains("Simulator", description.text):
+    if contains("Simulator", titleCnt) or contains("Simulator", descCnt):
         simResults = "This is either a clicker game or the very repetitive \"do, earn, buy, reapeat\" cycle, or it may actually be a well-done simulator."
 
     #Judge Roleplay/RP Games (look in descriptions as well for string literals!)
 
     obbResults = None
-    if contains("Obby", title.text) or contains("Obby", description.text):
+    if contains("Obby", titleCnt) or contains("Obby", descCnt):
         obbResults = "Parkour! Hope it's challenging. :)"
 
     #Judge Obbies
 
     rpResults = None
-    if contains("RP", title.text) or contains("RP", description.text) or contains("Roleplay", title.text) or contains("Roleplay", description.text):
+    if contains("RP", titleCnt) or contains("RP", descCnt) or contains("Roleplay", titleCnt) or contains("Roleplay", descCnt):
         rpResults = "So do you have the friends to be playing this, or are you just trolling on here? Also watch out for ODers, they're quite annoying."
 
-    driver.quit()
 
-    renderResults(playerCt, playerCtResult, yrRlsed, yrRlsedResult, petResults, scpResults, tycResults, simResults, obbResults, rpResults)
+
+    renderResults(titleCnt, devsCnt, playerCt, playerCtResult, yrRlsed, yrRlsedResult, petResults, scpResults, tycResults, simResults, obbResults, rpResults)
     
 
 def renderResults(*valsNRslts): #Use arbitrary arguments
     #Window 2
     display = tkinter.Tk()
     display.title("Result Window")
-    display.geometry('500x500')
     display.configure(bg='#002421')
     
+    title = "Game: " + valsNRslts[0]
+    devs = "Developers: " + valsNRslts[1]
+    renderTitle = tkinter.Label(display, text=title, bg='#424242', fg='#FFFFFF', pady=3, padx=3)
+    renderDevs = tkinter.Label(display, text=devs, bg='#424242', fg='#FFFFFF', pady=3, padx=3)
+
     render = [None] * len(valsNRslts) 
 
     #Create Elements (for handling arbitrary arguments, create an array and assign each element a label, then grid them all in another for loop)
     for i in range(len(valsNRslts)):
-        if valsNRslts[i] == None:
+        if valsNRslts[i] == None or i <= 1:
             continue; 
         render[i] = tkinter.Label(display, text=valsNRslts[i], bg='#424242', fg='#FFFFFF', pady=3, padx=3)
+
+
+    #Render Elements 
+    renderTitle.grid(row=0, column=0)
+    renderDevs.grid(row=1, column=0)
     
-    #Render Elements
     for i in range(len(render)):
-        if render[i] == None:
+        if render[i] == None or i <= 1:
             continue; 
         render[i].grid(row=i, column=0)
 
@@ -187,6 +203,6 @@ button_calculate = tkinter.Button(window, text="Calculate", command=judge)
 #Render the elements
 enter_URL.grid(row=0, column=0)
 entry_URL.grid(row=1, column=0)
-button_calculate.grid(row=1, column=1)
+button_calculate.grid(row=2, column=0)
 
 window.mainloop()
