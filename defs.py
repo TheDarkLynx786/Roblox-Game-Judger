@@ -80,7 +80,7 @@ def judge(entry_URL, invalid):
 
     if "https://www.roblox.com/games" not in entryTxt:
         print("Invalid URL Entered!")
-        invalid.grid(row=4, column=0)
+        invalid.grid(row=4, column=0, pady = 3)
         return
 
     options = ChromeOptions()
@@ -91,7 +91,7 @@ def judge(entry_URL, invalid):
         driver.get(entryTxt)
     except:
         print("Invalid URL Entered!")
-        invalid.grid(row=4, column=0)
+        invalid.grid(row=4, column=0, pady = 3)
         return
 
     

@@ -2,7 +2,7 @@ import tkinter
 import defs
 
 def begin():
-    loading.grid(row=3, column=0)
+    loading.grid(row=3, column=0, pady = 3)
     defs.judge(entry_URL, invalid)
 
 #Configure Window 1
