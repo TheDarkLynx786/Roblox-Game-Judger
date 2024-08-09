@@ -99,8 +99,10 @@ def judge():
     descCnt = description.text
 
     statistics = driver.find_elements(By.CSS_SELECTOR, ".builder-font .font-caption-body, .builder-font .font-caption-body:active, .builder-font .font-caption-body:focus, .builder-font .font-caption-body:hover, .builder-font .font-caption-body:link, .builder-font .font-caption-body:visited, .builder-font .tooltip .tooltip-inner, .builder-font .tooltip .tooltip-inner:active, .builder-font .tooltip .tooltip-inner:focus, .builder-font .tooltip .tooltip-inner:hover, .builder-font .tooltip .tooltip-inner:link, .builder-font .tooltip .tooltip-inner:visited")    
+    genre = statistics[6].text
     playerCtStrRaw = statistics[0]
     dateCreated = statistics[3]
+    dateLastChanged = statistics[4]
     
     #Judge Player Count
     if "," in playerCtStrRaw.text:    
@@ -119,6 +121,10 @@ def judge():
     yrRlsedResult = rlsYrJudger(yrRlsed)
     yrRlsed = "Date Created: " + str(dateCreated.text)
 
+    #Judge Last Changed Date
+
+
+
     #Judge Pet Games
     
     petResults = None
@@ -129,7 +135,7 @@ def judge():
 
     scpResults = None
     if contains("SCP", titleCnt) or contains("SCP", descCnt):
-        scpResults = "SCP huh? Having fun being part of that somewhat niche fanbase? Me too, it's quite a cool place. :)"
+        scpResults = "SCP, huh? Having fun being part of that somewhat niche fanbase? Interesting. :)"
 
     #Judge Tycoons
 
@@ -149,15 +155,41 @@ def judge():
         obbResults = "Parkour! Hope it's challenging. :)"
 
     #Judge Roleplay/RP Games (look in descriptions as well for string literals!)
-
-
     rpResults = None
     if contains("RP", titleCnt) or contains("RP", descCnt) or contains("Roleplay", titleCnt) or contains("Roleplay", descCnt):
         rpResults = "So do you have the friends to be playing this, or are you just trolling on here? Also watch out for ODers, they're quite annoying."
+    
+    #Judge Genres
+    genreTxt = "Genre: " + genre 
+    
+    #Judge FPS
+    fpsResults = None
+    if contains("FPS", genre):
+        fpsResults = "Ooh an FPS game? Either inspired by COD, COD Zombies, COD Gun Game, boomer shooters, or, quite rarely, it's its own thing."
+    
+    #Judge Fighting
+    fightResults = None
+    if contains("Fighting", genre):
+        fightResults = "Probably a mislisted FPS game, or even better, swordsplay/medival combat or melee combat."
+
+    #Judge All Genres
+    allGenreResults = None
+    if contains("All Genres", genre):
+        allGenreResults = "Really? Is the dev really that lazy to not list a genre for his game? Well I suppose it really could be \"All Genres,\" you never know."
+    
+    #Judge Adventure
+    advResults = None
+    if contains("Adventure", genre):
+        advResults = "Either a very underwhelming \"Adventure,\" or maybe something actually decent. Maybe something that's not even a proper adventure at all!"
+
+    #Judge RPG
+    rpgResults = None
+    if contains("RPG", genre):
+        rpgResults = "Interesting, some of these may be classified under Adventure. Don\'t these get quite grindy at times?"
 
 
 
-    renderResults(titleCnt, devsCnt, playerCt, playerCtResult, yrRlsed, yrRlsedResult, petResults, scpResults, tycResults, simResults, obbResults, rpResults)
+    renderResults(titleCnt, devsCnt, playerCt, playerCtResult, yrRlsed, yrRlsedResult, petResults, scpResults, tycResults, simResults, obbResults, rpResults, genreTxt, fpsResults, fightResults, allGenreResults, advResults, rpgResults)
     
 
 def renderResults(*valsNRslts): #Use arbitrary arguments
