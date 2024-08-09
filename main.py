@@ -1,8 +1,7 @@
-from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver import Chrome
 from selenium.webdriver import ChromeOptions
-import requests
+from datetime import date
 import tkinter
 import time
 
@@ -26,6 +25,22 @@ def rlsYrJudger(yrRlsed):
         result = "This game was created in the modern era of Roblox."
     elif yrRlsed >= 22:
         result = "This game is pretty fresh, and was created in the post-modern era of Roblox."
+    return result
+
+def lastUpdJudger(lastCh):
+    result = ""
+    if lastCh >= 0 and lastCh < 8:
+        result = "This game is pretty actively maintained!"
+    elif lastCh >= 8 and lastCh < 31:
+        result = "This game is active, updates tend to take some time to come out though. The sweet spot."
+    elif lastCh >= 31 and lastCh < 91:
+        result = "This game is likely working on a huge update, just had one. Maybe some planning is taking place."
+    elif lastCh >= 91 and lastCh < 181:
+        result = "Is this game undergoing a total revamp? Either that or the dev seems like he forgot about it."
+    elif lastCh >= 181 and lastCh < 365:
+        result = "The game has not been updated in a long time, likely finished or the dev seems to have forgotten."
+    elif lastCh >= 365:
+        result = "Boy, you must be a skeleton by now waiting for a new update, right?"
     return result
 
 def playerCtJudger(playerCt):
@@ -58,9 +73,11 @@ def contains(item1, item2):
         return True
     return False
 
-def getYear(dateCr):
-    arr = dateCr.split("/")
-    return int(arr[2][2:])
+def splitDate(date):
+    return date.split("/")
+
+def daysBetween(date1, date2):
+    return ((date1 - date2).days if date1 > date2 else (date2 - date1).days)
 
 def judge():
     
@@ -117,13 +134,18 @@ def judge():
 
     #Judge Release Year
     
-    yrRlsed = getYear(dateCreated.text)
+    yrRlsed = int(splitDate(dateCreated.text)[2][2:])
     yrRlsedResult = rlsYrJudger(yrRlsed)
     yrRlsed = "Date Created: " + str(dateCreated.text)
 
     #Judge Last Changed Date
 
-
+    yrChanged = splitDate(dateLastChanged.text)
+    yrChangedDate = date(int(yrChanged[2]), int(yrChanged[0]), int(yrChanged[1]))
+    today = date.today()
+    yrChanged = daysBetween(yrChangedDate, today)
+    yrChangedResult = lastUpdJudger(int(yrChanged)) 
+    yrChanged = "Last updated: " + str(daysBetween(yrChangedDate, today)) + " days ago"
 
     #Judge Pet Games
     
@@ -189,7 +211,7 @@ def judge():
 
 
 
-    renderResults(titleCnt, devsCnt, playerCt, playerCtResult, yrRlsed, yrRlsedResult, petResults, scpResults, tycResults, simResults, obbResults, rpResults, genreTxt, fpsResults, fightResults, allGenreResults, advResults, rpgResults)
+    renderResults(titleCnt, devsCnt, playerCt, playerCtResult, yrRlsed, yrRlsedResult, yrChanged, yrChangedResult, petResults, scpResults, tycResults, simResults, obbResults, rpResults, genreTxt, fpsResults, fightResults, allGenreResults, advResults, rpgResults)
     
 
 def renderResults(*valsNRslts): #Use arbitrary arguments
