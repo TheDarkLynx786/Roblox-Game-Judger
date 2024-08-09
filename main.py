@@ -2,7 +2,6 @@ import tkinter
 import defs
 
 def begin():
-    loading.grid(row=3, column=0, pady = 3)
     defs.judge(entry_URL, invalid)
 
 #Configure Window 1
@@ -18,8 +17,9 @@ invalid = tkinter.Label(window, text="Invalid URL Entered! Only enter the URLs o
 button_calculate = tkinter.Button(window, text="Calculate", command=begin)
 
 #Render the elements (Window 1)
-enter_URL.grid(row=0, column=0)
-entry_URL.grid(row=1, column=0)
-button_calculate.grid(row=2, column=0)
+enter_URL.grid(row=0, column=0, pady = 3)
+entry_URL.grid(row=1, column=0, pady = 3)
+button_calculate.grid(row=2, column=0, pady = 3)
+loading.grid(row=3, column=0, pady = 3)
 
 window.mainloop()
