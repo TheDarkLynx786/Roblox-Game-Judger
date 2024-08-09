@@ -143,13 +143,13 @@ def judge():
     if contains("Simulator", titleCnt) or contains("Simulator", descCnt):
         simResults = "This is either a clicker game or the very repetitive \"do, earn, buy, reapeat\" cycle, or it may actually be a well-done simulator."
 
-    #Judge Roleplay/RP Games (look in descriptions as well for string literals!)
-
+    #Judge Obbies
     obbResults = None
     if contains("Obby", titleCnt) or contains("Obby", descCnt):
         obbResults = "Parkour! Hope it's challenging. :)"
 
-    #Judge Obbies
+    #Judge Roleplay/RP Games (look in descriptions as well for string literals!)
+
 
     rpResults = None
     if contains("RP", titleCnt) or contains("RP", descCnt) or contains("Roleplay", titleCnt) or contains("Roleplay", descCnt):
@@ -181,13 +181,13 @@ def renderResults(*valsNRslts): #Use arbitrary arguments
 
 
     #Render Elements 
-    renderTitle.grid(row=0, column=0)
-    renderDevs.grid(row=1, column=0)
+    renderTitle.grid(row=0, column=0, padx = 3, pady = 3)
+    renderDevs.grid(row=1, column=0, padx = 3, pady = 3)
     
-    for i in range(len(render)):
+    for i in range(len(render)):      
         if render[i] == None or i <= 1:
-            continue; 
-        render[i].grid(row=i, column=0)
+            continue
+        render[i].grid(row=i, column=0, padx = 3, pady = 3)
 
     display.mainloop()
 
